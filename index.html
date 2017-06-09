@@ -13,7 +13,7 @@
       var servos = [0,0,0,0,0];
       function increase(i, d){
         var min = 0;
-        var max = 0;
+        var max = 180;
         var x = servos[i] + d;
         if (x < min) x= min;
         if (x > max) x = max;
