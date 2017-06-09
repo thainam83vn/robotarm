@@ -12,7 +12,12 @@
     <script>
       var servos = [0,0,0,0,0];
       function increase(i, d){
-        servos[i] += d;
+        var min = 0;
+        var max = 0;
+        var x = servos[i] + d;
+        if (x < min) x= min;
+        if (x > max) x = max;
+        servos[i] = x;
         $("#servo"+i).html(servos[i] + "");
         console.log(servos);
       }
