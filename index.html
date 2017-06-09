@@ -20,6 +20,12 @@
         servos[i] = x;
         $("#servo"+i).html(servos[i] + "");
         console.log(servos);
+        $.ajax({
+          url: "/" + i + "/" + servos[i],
+          context: document.body
+        }).done(function() {
+          $( this ).addClass( "done" );
+        });
       }
     </script>
   </head>

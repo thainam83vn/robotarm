@@ -12,11 +12,11 @@ class myHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/":
             self.path = "/index.html"
-            print('index.html')
+
+        if self.path.endswith(".html") or self.path.endswith(".jpg") or self.path.endswith(".gif") or self.path.endswith(".js") or self.path.endswith(".css"):
             try:
                 # Check the file extension required and
                 # set the right mime type
-
                 sendReply = False
                 if self.path.endswith(".html"):
                     mimetype = 'text/html'
@@ -43,7 +43,6 @@ class myHandler(BaseHTTPRequestHandler):
                     self.wfile.write(f.read())
                     f.close()
                 return
-
             except IOError:
                 self.send_error(404, 'File Not Found: %s' % self.path)
         else:
