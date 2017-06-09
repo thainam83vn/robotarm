@@ -11,7 +11,7 @@ PORT_NUMBER = 8000
 GPIO.setmode(GPIO.BOARD)
 RANGE = [[0,180],[50,120],[50,120],[50,120],[50,120]]
 frequency_hertz = 50
-pins = [8, 10, 12, 16, 18]
+pins = [35, 38, 40, 16, 18]
 pwms = []
 for i in range(0, len(pins)):
     GPIO.setup(pins[i], GPIO.OUT)
