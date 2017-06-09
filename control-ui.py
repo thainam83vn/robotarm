@@ -2,7 +2,7 @@ from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 from os import curdir, sep
 import cgi
 
-PORT = 8000
+PORT_NUMBER = 8000
 
 
 # This class will handles any incoming request from
@@ -29,6 +29,5 @@ try:
     server.serve_forever()
 
 except KeyboardInterrupt:
-    print
-    '^C received, shutting down the web server'
+    print('^C received, shutting down the web server')
     server.socket.close()
