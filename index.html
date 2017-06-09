@@ -13,7 +13,7 @@
       var servos = [0,0,0,0,0];
       function increase(i, d){
         servos[i] += d;
-        $("#servo"+i).innerHtml(servos[i] + "");
+        $("#servo"+i).html(servos[i] + "");
         console.log(servos);
       }
     </script>
@@ -28,8 +28,6 @@
       <div class="row">
         <div class="col">
           Servo 1 <span id="servo1"></span>
-        </div>
-        <div class="col">
           <button type="button" class="btn btn-success" onclick="increase(1,2)">+</button>
           <button type="button" class="btn btn-danger"  onclick="increase(1,-2)">-</button>
         </div>
