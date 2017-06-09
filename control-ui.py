@@ -1,5 +1,6 @@
-import SimpleHTTPServer
-import SocketServer
+from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
+from os import curdir, sep
+import cgi
 
 PORT = 8000
 
