@@ -100,3 +100,7 @@ try:
 except KeyboardInterrupt:
     print('^C received, shutting down the web server')
     server.socket.close()
+
+
+for i in range(0,len(pwms)):
+    pwms[i].stop()
