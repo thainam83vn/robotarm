@@ -3,9 +3,7 @@ import time
 from random import randint
 
 GPIO.setmode(GPIO.BOARD)
-
 RANGE = [[0,180],[50,120],[50,120],[50,120],[50,120]]
-
 frequency_hertz = 50
 pins = [8, 10, 12, 16, 18]
 pwms = []

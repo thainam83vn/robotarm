@@ -1,9 +1,44 @@
+import RPi.GPIO as GPIO
+import time
+from random import randint
+
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 from os import curdir, sep
 import cgi
 
 PORT_NUMBER = 8000
 
+GPIO.setmode(GPIO.BOARD)
+RANGE = [[0,180],[50,120],[50,120],[50,120],[50,120]]
+frequency_hertz = 50
+pins = [8, 10, 12, 16, 18]
+pwms = []
+for i in range(0, len(pins)):
+    GPIO.setup(pins[i], GPIO.OUT)
+    pwms = pwms + [GPIO.PWM(pins[i], frequency_hertz)]
+
+def degree2frequency(degree):
+    frequency_hertz = 50
+    ms_per_cycle = 1000 / frequency_hertz
+    left_position = 0.40
+    right_position = 2.5
+    max_position = right_position - left_position
+    position = degree * max_position / 180 + left_position;
+    duty_cycle_percentage = position * 100 / ms_per_cycle
+    return duty_cycle_percentage
+
+def control(pwm, degree):
+    duty = degree2frequency(degree)
+    pwm.start(duty)
+
+def reset(pwm):
+    duty = degree2frequency(0)
+    pwm.start(duty)
+
+def generateCmd():
+    ipwm = randint(0, 9) % 3
+    d = randint(0, 180) % 180
+    control(pwms[ipwm], d)
 
 # This class will handles any incoming request from
 # the browser
@@ -47,9 +82,10 @@ class myHandler(BaseHTTPRequestHandler):
                 self.send_error(404, 'File Not Found: %s' % self.path)
         else:
             parts = self.path.split('/')
-            servoid = parts[len(parts) - 2]
-            degree = parts[len(parts) - 1]
+            servoid = int(parts[len(parts) - 2])
+            degree = int(parts[len(parts) - 1])
             print(servoid, ' ', degree)
+            control(pwms[servoid], degree)
 
 
 try:
