@@ -19,9 +19,16 @@ class myHandler(BaseHTTPRequestHandler):
             print(servoid, ' ', degree)
 
 
-Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+try:
+    # Create a web server and define the handler to manage the
+    # incoming request
+    server = HTTPServer(('', PORT_NUMBER), myHandler)
+    print('Started httpserver on port ', PORT_NUMBER)
 
-httpd = SocketServer.TCPServer(("", PORT), Handler)
+    # Wait forever for incoming htto requests
+    server.serve_forever()
 
-print("serving at port", PORT)
-httpd.serve_forever()
+except KeyboardInterrupt:
+    print
+    '^C received, shutting down the web server'
+    server.socket.close()
