@@ -11,7 +11,8 @@ class myHandler(BaseHTTPRequestHandler):
     # Handler for the GET requests
     def do_GET(self):
         if self.path == "/":
-            self.path = "/index.html"
+            self.path = "index.html"
+            print('index.html')
         else:
             parts = self.path.split('/')
             servoid = parts[len(parts) - 2]
