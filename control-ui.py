@@ -82,8 +82,8 @@ class myHandler(BaseHTTPRequestHandler):
                 self.send_error(404, 'File Not Found: %s' % self.path)
         else:
             parts = self.path.split('/')
-            servoid = int(parts[len(parts) - 2])
-            degree = int(parts[len(parts) - 1])
+            servoid = int(float(parts[len(parts) - 2]))
+            degree = int(float(parts[len(parts) - 1]))
             print(servoid, ' ', degree)
             control(pwms[servoid], degree)
 
