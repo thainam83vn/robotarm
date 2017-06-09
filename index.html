@@ -11,6 +11,15 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <script>
       var servos = [0,0,0,0,0];
+      function stop(){
+        $.ajax({
+          url: "/stop",
+          context: document.body
+        }).done(function() {
+          $( this ).addClass( "done" );
+        });
+      }
+
       function increase(i, d){
         var min = 0;
         var max = 180;
@@ -41,6 +50,11 @@
           Servo 1 <span id="servo1"></span>
           <button type="button" class="btn btn-success" onclick="increase(0,2)">+</button>
           <button type="button" class="btn btn-danger"  onclick="increase(0,-2)">-</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button type="button" class="btn btn-success" onclick="stop">STOP</button>
         </div>
       </div>
     </div>

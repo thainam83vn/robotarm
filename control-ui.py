@@ -80,6 +80,9 @@ class myHandler(BaseHTTPRequestHandler):
                 return
             except IOError:
                 self.send_error(404, 'File Not Found: %s' % self.path)
+        elif self.path == "/stop":
+            for i in range(0, len(pwms)):
+                pwms[i].stop()
         else:
             parts = self.path.split('/')
             print(parts)
