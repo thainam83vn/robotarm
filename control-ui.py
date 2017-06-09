@@ -48,7 +48,7 @@ class myHandler(BaseHTTPRequestHandler):
         if self.path == "/":
             self.path = "/index.html"
 
-        if self.path.endswith(".html") or self.path.endswith(".jpg") or self.path.endswith(".gif") or self.path.endswith(".js") or self.path.endswith(".css"):
+        if self.path.endswith(".html") or self.path.endswith(".jpg") or self.path.endswith(".gif") or self.path.endswith(".js") or self.path.endswith(".css")  or self.path.endswith(".map"):
             try:
                 # Check the file extension required and
                 # set the right mime type
