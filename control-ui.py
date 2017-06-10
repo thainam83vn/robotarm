@@ -17,6 +17,7 @@ for i in range(0, len(pins)):
     GPIO.setup(pins[i], GPIO.OUT)
     pwms = pwms + [GPIO.PWM(pins[i], frequency_hertz)]
 
+#DutyCycle = 1/18* (DesiredAngle) + 2
 def degree2frequency(degree):
     frequency_hertz = 50
     ms_per_cycle = 1000 / frequency_hertz
@@ -25,7 +26,8 @@ def degree2frequency(degree):
     max_position = right_position - left_position
     position = degree * max_position / 180 + left_position;
     duty_cycle_percentage = position * 100 / ms_per_cycle
-    return duty_cycle_percentage
+    DutyCycle = 1 / 18 * degree + 2
+    return DutyCycle
 
 def control(pwm, degree):
     duty = degree2frequency(degree)
