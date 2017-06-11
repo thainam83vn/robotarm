@@ -10,7 +10,7 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <script>
-      var servos = [0,0,0,0,0];
+      var servos = [0,0,0,0,0,0,0];
       function stop(){
         $.ajax({
           url: "/stop",
@@ -24,19 +24,28 @@
         var min = 0;
         var max = 180;
         var x = servos[i] + d;
+	var op = '+';
+	if (d<0) op='-';
         if (x < min) x= min;
         if (x > max) x = max;
         servos[i] = x;
         $("#servo"+i).html(servos[i] + "");
         console.log(servos);
         $.ajax({
-          url: "/" + i + "/" + servos[i],
+          url: "/" + (i) + "/" + op,
           context: document.body
         }).done(function() {
           $( this ).addClass( "done" );
         });
       }
     </script>
+    <style>
+        .col{
+        }
+        .col span{
+           width:150px;
+        }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -47,9 +56,16 @@
       </div>
       <div class="row">
         <div class="col">
-          Servo4 <span id="servo4"></span>
-          <button type="button" class="btn btn-success" onclick="increase(4,2)">+</button>
-          <button type="button" class="btn btn-danger"  onclick="increase(4,-2)">-</button>
+          Servo5 <span id="servo6"></span>
+          <button type="button" class="btn btn-success" onclick="increase(6,2)">+</button>
+          <button type="button" class="btn btn-danger"  onclick="increase(6,-2)">-</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          Servo4 <span id="servo5"></span>
+          <button type="button" class="btn btn-success" onclick="increase(5,2)">+</button>
+          <button type="button" class="btn btn-danger"  onclick="increase(5,-2)">-</button>
         </div>
       </div>
       <div class="row">
@@ -68,16 +84,9 @@
       </div>
       <div class="row">
         <div class="col">
-          Servo1 <span id="servo1"></span>
+          Servo1  <span id="servo1"></span>
           <button type="button" class="btn btn-success" onclick="increase(1,2)">+</button>
           <button type="button" class="btn btn-danger"  onclick="increase(1,-2)">-</button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          Servo0  <span id="servo0"></span>
-          <button type="button" class="btn btn-success" onclick="increase(0,2)">+</button>
-          <button type="button" class="btn btn-danger"  onclick="increase(0,-2)">-</button>
         </div>
       </div>
       <div class="row">

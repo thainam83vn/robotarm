@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+import serial
 import time
 from random import randint
 
@@ -6,41 +6,12 @@ from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 from os import curdir, sep
 import cgi
 
-PORT_NUMBER = 8000
+PORT_NUMBER=8000
+USBCOM = '/dev/ttyUSB0'
+ser = serial.Serial(USBCOM)
 
-GPIO.setmode(GPIO.BOARD)
-RANGE = [[0,180],[50,120],[50,120],[50,120],[50,120]]
-frequency_hertz = 50
-pins = [35, 38, 40, 16, 18]
-pwms = []
-for i in range(0, len(pins)):
-    GPIO.setup(pins[i], GPIO.OUT)
-    pwms = pwms + [GPIO.PWM(pins[i], frequency_hertz)]
-
-#DutyCycle = 1/18* (DesiredAngle) + 2
-def degree2frequency(degree):
-    frequency_hertz = 50
-    ms_per_cycle = 1000 / frequency_hertz
-    left_position = 0.40
-    right_position = 2.5
-    max_position = right_position - left_position
-    position = degree * max_position / 180 + left_position;
-    duty_cycle_percentage = position * 100 / ms_per_cycle
-    DutyCycle = 1 / 18 * degree + 2
-    return DutyCycle
-
-def control(pwm, degree):
-    duty = degree2frequency(degree)
-    pwm.start(duty)
-
-def reset(pwm):
-    duty = degree2frequency(0)
-    pwm.start(duty)
-
-def generateCmd():
-    ipwm = randint(0, 9) % 3
-    d = randint(0, 180) % 180
-    control(pwms[ipwm], d)
+def control(cmd):
+    ser.write(cmd)
 
 # This class will handles any incoming request from
 # the browser
@@ -82,16 +53,13 @@ class myHandler(BaseHTTPRequestHandler):
                 return
             except IOError:
                 self.send_error(404, 'File Not Found: %s' % self.path)
-        elif self.path == "/stop":
-            for i in range(0, len(pwms)):
-                pwms[i].stop()
         else:
             parts = self.path.split('/')
             print(parts)
-            servoid = int(float(parts[len(parts) - 2]))
-            degree = int(float(parts[len(parts) - 1]))
-            print(servoid, ' ', degree)
-            control(pwms[servoid], degree)
+            servoid = parts[len(parts)-2]
+            op = parts[len(parts) - 1]
+            print(servoid, op)
+            control(servoid+op+'\n')
 
 
 try:
@@ -106,7 +74,3 @@ try:
 except KeyboardInterrupt:
     print('^C received, shutting down the web server')
     server.socket.close()
-
-
-for i in range(0,len(pwms)):
-    pwms[i].stop()
