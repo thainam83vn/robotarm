@@ -11,21 +11,46 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <script>
       var servos = [0,0,0,0,0,0,0];
-      function stop(){
-        $.ajax({
-          url: "/stop",
-          context: document.body
-        }).done(function() {
-          $( this ).addClass( "done" );
+      var curServo = 0;
+      var curOp = 0;
+
+      function control(id){
+        console.log("control", id);
+        var arr = id.split('_');
+        curServo = arr[1];
+        if (arr[2]=="up")
+          curOp = 1;
+        else
+          curOp = -1;
+        increase2(curServo, curOp);
+      }
+      function cancel(){
+        console.log("cancel");
+        curServo = 0;
+        curOp = 0;
+      }
+      document.onreadystatechange = function(){
+        $("button").on("touchstart mousedown",function(e){
+          var id = e.target.id;
+          console.log("touchstart", e, id);
+          control(id);
+
+        });
+        $("button").on("touchend mouseup",function(e){
+          var id = e.target.id;
+          console.log("touchend", e, id);
+          cancel();
         });
       }
 
       function increase(i, d){
+
         var min = 0;
         var max = 180;
+        if (i==6) max=45;
         var x = servos[i] + d;
-	var op = '+';
-	if (d<0) op='-';
+        var op = '+';
+        if (d<0) op='-';
         if (x < min) x= min;
         if (x > max) x = max;
         servos[i] = x;
@@ -37,61 +62,124 @@
         }).done(function() {
           $( this ).addClass( "done" );
         });
+
+      }
+
+      function increase2(i, d){
+        if(i==0||d==0)
+          return;
+        console.log("increase2", i, d);
+        var min = 0;
+        var max = 180;
+        if (i==6) max=45;
+        var x = servos[i] + d;
+	    var op = '+';
+	    if (d<0) op='-';
+        if (x < min) x= min;
+        if (x > max) x = max;
+        servos[i] = x;
+        $("#servo"+i).html(servos[i] + "");
+        console.log(servos);
+        curServo = i;
+        curOp=d;
+        $.ajax({
+          url: "/" + (i) + "/" + op,
+          context: document.body
+        }).done(function() {
+          //$( this ).addClass( "done" );
+          setTimeout(function(){
+            increase2(curServo,curOp);
+          },50);
+        });
+      }
+
+      function mouseUp(){
+        console.log("mouseup");
+        curServo=0;
+        curOp = 0;
       }
     </script>
     <style>
         .col{
         }
-        .col span{
-           width:150px;
+
+        .col span.header{
+          width:90px;
+          display:inline-block;
         }
+
+        .col .btncontrol{
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          margin-bottom: 5px;
+        }
+
+        iframe{
+          width:550px;
+          height:450px;
+        }
+
+
     </style>
   </head>
   <body>
     <div class="container">
       <div class="row">
-        <div class="col">
-          Robotic Arm
+        <div class="col-sm-3">
+          <div class="row">
+            <div class="col">
+              <span class="banner">Robotic Arm</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <span class="header">Claw</span>
+              <button id="btn_6_up" type="button" class="btn btn-success btncontrol" >+</button>
+              <button id="btn_6_down" type="button" class="btn btn-danger btncontrol" >-</button>
+              <span id="servo6"class="badge badge-pill badge-info"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <span class="header">Support Claw</span>
+              <button  id="btn_5_up" type="button" class="btn btn-success btncontrol" >+</button>
+              <button  id="btn_5_down" type="button" class="btn btn-danger btncontrol"  >-</button>
+              <span id="servo5"class="badge badge-pill badge-info"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <span class="header">Upper Back</span>
+              <button  id="btn_3_up" type="button" class="btn btn-success btncontrol">+</button>
+              <button  id="btn_3_down" type="button" class="btn btn-danger btncontrol" >-</button>
+              <span id="servo3"class="badge badge-pill badge-info"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <span class="header">Lower Back</span>
+              <button  id="btn_2_up" type="button" class="btn btn-success btncontrol" >+</button>
+              <button  id="btn_2_down" type="button" class="btn btn-danger btncontrol" >-</button>
+              <span id="servo2"class="badge badge-pill badge-info"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <span class="header">Foot</span>
+              <button  id="btn_1_up" type="button" class="btn btn-success btncontrol" >+</button>
+              <button  id="btn_1_down" type="button" class="btn btn-danger btncontrol">-</button>
+              <span id="servo1"class="badge badge-pill badge-info"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button type="button" class="btn btn-success" onclick="stop">STOP</button>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          Servo5 <span id="servo6"></span>
-          <button type="button" class="btn btn-success" onclick="increase(6,2)">+</button>
-          <button type="button" class="btn btn-danger"  onclick="increase(6,-2)">-</button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          Servo4 <span id="servo5"></span>
-          <button type="button" class="btn btn-success" onclick="increase(5,2)">+</button>
-          <button type="button" class="btn btn-danger"  onclick="increase(5,-2)">-</button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          Servo3 <span id="servo3"></span>
-          <button type="button" class="btn btn-success" onclick="increase(3,2)">+</button>
-          <button type="button" class="btn btn-danger"  onclick="increase(3,-2)">-</button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          Servo2 <span id="servo2"></span>
-          <button type="button" class="btn btn-success" onclick="increase(2,2)">+</button>
-          <button type="button" class="btn btn-danger"  onclick="increase(2,-2)">-</button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          Servo1  <span id="servo1"></span>
-          <button type="button" class="btn btn-success" onclick="increase(1,2)">+</button>
-          <button type="button" class="btn btn-danger"  onclick="increase(1,-2)">-</button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <button type="button" class="btn btn-success" onclick="stop">STOP</button>
+        <div class="col-sm-7">
+          <iframe src="http://raspberrypi:5000/"></iframe>
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ from os import curdir, sep
 import cgi
 
 PORT_NUMBER=8000
-USBCOM = '/dev/ttyUSB0'
+USBCOM = 'COM4'
 ser = serial.Serial(USBCOM)
 
 def control(cmd):
@@ -60,6 +60,7 @@ class myHandler(BaseHTTPRequestHandler):
             op = parts[len(parts) - 1]
             print(servoid, op)
             control(servoid+op+'\n')
+            self.send_response(200)
 
 
 try:
