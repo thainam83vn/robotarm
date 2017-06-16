@@ -7,11 +7,13 @@ from os import curdir, sep
 import cgi
 
 PORT_NUMBER=8000
-USBCOM = 'COM4'
+USBCOM = 'COM3'
 ser = serial.Serial(USBCOM)
 
 def control(cmd):
     ser.write(cmd)
+    #for i in range(1,6):
+    #    print("Servo" + str(i) + ":" + str(ser.read()))
 
 # This class will handles any incoming request from
 # the browser
